@@ -1,0 +1,2552 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+
+<title>THE STORY OF RANIA</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    background:#07060b;
+    color:white;
+    overflow:hidden;
+}
+
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+}
+
+button{
+    font:inherit;
+}
+
+#app{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    background:#07060b;
+}
+
+/* =========================
+   SCREENS
+========================= */
+
+.scene{
+    position:absolute;
+    inset:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:70px 18px 35px;
+
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+
+    transform:scale(1.025);
+
+    transition:
+        opacity .7s ease,
+        transform .7s ease,
+        visibility 0s linear .7s;
+
+    overflow:auto;
+}
+
+.scene.active{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+    transform:scale(1);
+
+    transition:
+        opacity .7s ease,
+        transform .7s ease,
+        visibility 0s;
+}
+
+.scene:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+
+    background:
+        radial-gradient(
+            circle at 20% 15%,
+            rgba(255,50,130,.13),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 75%,
+            rgba(100,60,255,.10),
+            transparent 35%
+        );
+}
+
+.inner{
+    position:relative;
+    z-index:5;
+
+    width:min(720px,100%);
+    text-align:center;
+
+    margin:auto;
+}
+
+.kicker{
+    font-size:10px;
+    letter-spacing:4px;
+    color:#dca1bd;
+    font-weight:800;
+    margin-bottom:15px;
+}
+
+h1{
+    font-size:clamp(38px,11vw,72px);
+    line-height:1.08;
+    font-weight:900;
+    letter-spacing:-1px;
+}
+
+h2{
+    font-size:clamp(26px,7vw,43px);
+    line-height:1.25;
+    margin-bottom:16px;
+}
+
+p{
+    color:#e9dce5;
+    line-height:2;
+    font-size:14px;
+}
+
+.muted{
+    color:#9f8c9b;
+    font-size:12px;
+    line-height:1.8;
+}
+
+.gold{
+    color:#e8c58c;
+}
+
+.pink{
+    color:#ff9fc9;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.btn{
+    border:1px solid rgba(255,190,220,.22);
+
+    border-radius:999px;
+
+    padding:13px 24px;
+
+    color:white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e9438e,
+            #8d2d72
+        );
+
+    box-shadow:
+        0 12px 35px rgba(233,67,142,.22),
+        inset 0 1px rgba(255,255,255,.2);
+
+    cursor:pointer;
+
+    margin-top:22px;
+
+    min-height:50px;
+
+    font-weight:800;
+}
+
+.btn:active{
+    transform:scale(.95);
+}
+
+.smallBtn{
+    padding:10px 17px;
+    font-size:12px;
+}
+
+/* =========================
+   SOUND
+========================= */
+
+#sound{
+    position:fixed;
+
+    z-index:1000;
+
+    top:max(
+        13px,
+        env(safe-area-inset-top)
+    );
+
+    left:13px;
+
+    width:45px;
+    height:45px;
+
+    border-radius:50%;
+
+    border:1px solid rgba(255,255,255,.2);
+
+    background:rgba(12,8,15,.72);
+
+    color:white;
+
+    backdrop-filter:blur(14px);
+
+    cursor:pointer;
+}
+
+/* =========================
+   PROGRESS
+========================= */
+
+#bar{
+    position:fixed;
+
+    z-index:1100;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:3px;
+
+    background:#17121a;
+}
+
+#barFill{
+    display:block;
+
+    width:0;
+
+    height:100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff4f9d,
+            #e8c58c
+        );
+
+    box-shadow:0 0 14px #ff4f9d;
+
+    transition:.6s;
+}
+
+/* =========================
+   GRAIN
+========================= */
+
+.grain{
+    position:absolute;
+    inset:0;
+
+    opacity:.06;
+
+    pointer-events:none;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+}
+
+/* =========================
+   CINEMA
+========================= */
+
+.cinema{
+    background:
+        linear-gradient(
+            rgba(0,0,0,.35),
+            rgba(0,0,0,.7)
+        ),
+        radial-gradient(
+            circle at 50% 38%,
+            #241225 0,
+            #0a080e 55%,
+            #050408 100%
+        );
+}
+
+.cinema .inner{
+    max-width:620px;
+}
+
+.film{
+    font-family:Georgia,serif;
+
+    color:#d9c6d2;
+
+    letter-spacing:6px;
+
+    font-size:11px;
+
+    margin-bottom:25px;
+}
+
+.titleLine{
+    height:1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #b18b9e,
+            transparent
+        );
+
+    margin:24px auto;
+
+    width:70%;
+}
+
+.reel{
+    font-size:54px;
+
+    filter:
+        drop-shadow(
+            0 0 22px
+            rgba(255,100,170,.25)
+        );
+
+    margin-bottom:20px;
+}
+
+.fadeIn{
+    animation:fade 1.4s both;
+}
+
+@keyframes fade{
+
+    from{
+        opacity:0;
+        transform:translateY(14px);
+    }
+
+    to{
+        opacity:1;
+        transform:none;
+    }
+
+}
+
+/* =========================
+   HELLO KITTY
+========================= */
+
+.kitty{
+    width:min(155px,48vw);
+
+    max-height:190px;
+
+    object-fit:contain;
+
+    display:block;
+
+    margin:10px auto 18px;
+
+    filter:
+        drop-shadow(
+            0 14px 25px
+            rgba(255,50,150,.25)
+        );
+}
+
+.kittyHero{
+    width:min(210px,60vw);
+    max-height:240px;
+}
+
+/* =========================
+   SECRET FILE
+========================= */
+
+.file{
+    text-align:right;
+
+    border:
+        1px solid
+        rgba(232,197,140,.2);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.06),
+            rgba(255,255,255,.02)
+        );
+
+    border-radius:24px;
+
+    padding:21px;
+
+    margin-top:18px;
+
+    box-shadow:
+        0 20px 70px
+        rgba(0,0,0,.35);
+}
+
+.fileTop{
+    display:flex;
+
+    justify-content:space-between;
+    align-items:center;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.09);
+
+    padding-bottom:12px;
+
+    margin-bottom:15px;
+}
+
+.fileCode{
+    font-size:11px;
+
+    color:#e8c58c;
+
+    letter-spacing:2px;
+
+    font-weight:800;
+}
+
+.status{
+    font-size:10px;
+
+    color:#8ff0ba;
+
+    border:
+        1px solid
+        rgba(143,240,186,.25);
+
+    padding:5px 8px;
+
+    border-radius:999px;
+}
+
+.fileRows{
+    display:grid;
+    gap:11px;
+}
+
+.row{
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    font-size:12px;
+
+    color:#a993a1;
+}
+
+.row b{
+    color:#f5e6ee;
+    font-weight:700;
+}
+
+.danger{
+    color:#ff9fc9!important;
+}
+
+/* =========================
+   EVIDENCE
+========================= */
+
+.evidenceGrid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:10px;
+
+    margin-top:20px;
+}
+
+.evidence{
+    min-height:135px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.1);
+
+    border-radius:22px;
+
+    background:
+        rgba(255,255,255,.045);
+
+    padding:18px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.evidence:active{
+    transform:scale(.95);
+}
+
+.eIcon{
+    font-size:35px;
+    margin-bottom:10px;
+}
+
+.eTitle{
+    font-size:12px;
+    font-weight:800;
+}
+
+.eSub{
+    font-size:10px;
+
+    color:#a995a3;
+
+    margin-top:5px;
+}
+
+/* =========================
+   KIND HEART
+========================= */
+
+.kind{
+    margin-top:18px;
+
+    border-radius:28px;
+
+    padding:24px 19px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,82,158,.10),
+            rgba(255,255,255,.035)
+        );
+
+    border:
+        1px solid
+        rgba(255,180,220,.17);
+
+    box-shadow:
+        0 25px 80px
+        rgba(0,0,0,.35);
+}
+
+.kind p{
+    margin-bottom:12px;
+}
+
+.kind strong{
+    color:#ffb1d2;
+}
+
+/* =========================
+   QUIZ
+========================= */
+
+.quiz{
+    margin-top:20px;
+    text-align:right;
+}
+
+.q{
+    border:
+        1px solid
+        rgba(255,255,255,.09);
+
+    background:
+        rgba(255,255,255,.04);
+
+    padding:17px;
+
+    border-radius:19px;
+
+    margin:9px 0;
+
+    cursor:pointer;
+
+    color:#f1e5ec;
+
+    font-size:13px;
+}
+
+.q:active{
+    transform:scale(.98);
+}
+
+.q.correct{
+    border-color:
+        rgba(143,240,186,.4);
+
+    background:
+        rgba(143,240,186,.07);
+
+    color:#a8f3c6;
+}
+
+/* =========================
+   TIME LINE
+========================= */
+
+.timeMachine{
+    margin:20px auto 0;
+
+    width:min(420px,100%);
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    border-radius:28px;
+
+    padding:25px;
+
+    background:
+        radial-gradient(
+            circle,
+            #1d1321,
+            #09070d 65%
+        );
+}
+
+.dial{
+    width:155px;
+    height:155px;
+
+    border-radius:50%;
+
+    margin:auto;
+
+    border:
+        1px solid
+        rgba(232,197,140,.3);
+
+    box-shadow:
+        0 0 60px
+        rgba(232,197,140,.1),
+        inset 0 0 35px
+        rgba(255,255,255,.03);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    position:relative;
+}
+
+.dial:before{
+    content:"";
+
+    position:absolute;
+
+    width:125px;
+    height:125px;
+
+    border-radius:50%;
+
+    border:
+        1px dashed
+        rgba(255,255,255,.15);
+}
+
+.dialYear{
+    font-family:Georgia,serif;
+
+    font-size:30px;
+
+    color:#e8c58c;
+}
+
+.years{
+    display:flex;
+
+    justify-content:center;
+
+    gap:8px;
+
+    flex-wrap:wrap;
+
+    margin-top:18px;
+}
+
+.year{
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    background:#100c12;
+
+    color:#ddd;
+
+    border-radius:999px;
+
+    padding:8px 13px;
+
+    cursor:pointer;
+
+    font-size:11px;
+}
+
+.year.active{
+    border-color:#e8c58c;
+    color:#e8c58c;
+}
+
+/* =========================
+   MAIL
+========================= */
+
+.mail{
+    margin-top:20px;
+
+    text-align:left;
+
+    direction:ltr;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    border-radius:22px;
+
+    background:#0e0b10;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 25px 80px
+        rgba(0,0,0,.4);
+}
+
+.mailHead{
+    padding:14px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+
+    font-size:11px;
+
+    color:#a99ca7;
+}
+
+.mailBody{
+    padding:20px;
+
+    min-height:230px;
+
+    color:#eee;
+
+    line-height:2;
+
+    font-family:Georgia,serif;
+
+    direction:rtl;
+
+    text-align:right;
+
+    font-size:15px;
+}
+
+.typingCursor{
+    display:inline-block;
+
+    width:7px;
+    height:17px;
+
+    background:#ff79ae;
+
+    vertical-align:-3px;
+
+    animation:blink .8s infinite;
+}
+
+@keyframes blink{
+    50%{
+        opacity:0;
+    }
+}
+
+/* =========================
+   DELETED SCENE
+========================= */
+
+.scene8{
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            #2a0d20,
+            #0a060d 58%,
+            #050408
+        );
+}
+
+.deleted{
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    border-radius:24px;
+
+    padding:25px;
+
+    background:
+        rgba(255,255,255,.035);
+
+    margin-top:20px;
+}
+
+.play{
+    width:86px;
+    height:86px;
+
+    border-radius:50%;
+
+    border:
+        1px solid
+        rgba(255,190,220,.35);
+
+    background:
+        linear-gradient(
+            145deg,
+            #ff579f,
+            #8c2b72
+        );
+
+    color:white;
+
+    font-size:30px;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 0 50px
+        rgba(255,70,160,.25);
+}
+
+/* =========================
+   END
+========================= */
+
+.end{
+    background:
+        radial-gradient(
+            circle at center,
+            #210b19,
+            #07060b 60%
+        );
+}
+
+.end .big{
+    font-family:Georgia,serif;
+
+    font-size:
+        clamp(38px,10vw,70px);
+
+    letter-spacing:3px;
+}
+
+.end .continue{
+    margin-top:25px;
+
+    color:#e8c58c;
+
+    letter-spacing:5px;
+
+    font-size:10px;
+}
+
+.heart{
+    font-size:80px;
+
+    filter:
+        drop-shadow(
+            0 0 28px
+            #ff4e9d
+        );
+
+    animation:beat 1.5s infinite;
+}
+
+@keyframes beat{
+    50%{
+        transform:scale(1.12);
+    }
+}
+
+/* =========================
+   PARTICLES
+========================= */
+
+#particles{
+    position:fixed;
+
+    inset:0;
+
+    z-index:2000;
+
+    pointer-events:none;
+
+    overflow:hidden;
+}
+
+.part{
+    position:fixed;
+
+    font-size:18px;
+
+    animation:
+        fly 1.3s
+        ease-out
+        forwards;
+}
+
+@keyframes fly{
+
+    from{
+        transform:
+            translate(0,0)
+            scale(.5);
+
+        opacity:1;
+    }
+
+    to{
+        transform:
+            translate(
+                var(--x),
+                var(--y)
+            )
+            rotate(360deg)
+            scale(1.3);
+
+        opacity:0;
+    }
+
+}
+
+/* =========================
+   POPUP
+========================= */
+
+#popup{
+    position:fixed;
+
+    inset:0;
+
+    z-index:3000;
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:18px;
+
+    background:
+        rgba(4,2,6,.82);
+
+    backdrop-filter:blur(12px);
+}
+
+#popup.show{
+    display:flex;
+}
+
+.popBox{
+    width:min(500px,100%);
+
+    border:
+        1px solid
+        rgba(255,190,220,.22);
+
+    border-radius:28px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #281022,
+            #0d080e
+        );
+
+    padding:25px 20px;
+
+    text-align:center;
+
+    box-shadow:
+        0 30px 100px
+        #000;
+}
+
+.popTitle{
+    font-size:25px;
+
+    color:#ffacd0;
+
+    margin-bottom:10px;
+}
+
+.popText{
+    font-size:14px;
+
+    line-height:2;
+
+    color:#ecdce5;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:600px){
+
+    .scene{
+        padding:
+            65px 14px 28px;
+    }
+
+    p{
+        font-size:13px;
+    }
+
+    .file{
+        padding:18px;
+    }
+
+    .evidenceGrid{
+        gap:8px;
+    }
+
+    .evidence{
+        min-height:120px;
+    }
+
+    .letter{
+        padding:22px 17px;
+    }
+
+    .letter p{
+        font-size:14px;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<!-- MUSIC -->
+<audio
+    id="music"
+    src="music.mp3"
+    loop
+    preload="auto">
+</audio>
+
+<!-- SOUND BUTTON -->
+<button
+    id="sound"
+    onclick="toggleSound()">
+    🔇
+</button>
+
+<!-- PROGRESS -->
+<div id="bar">
+    <i id="barFill"></i>
+</div>
+
+<!-- PARTICLES -->
+<div id="particles"></div>
+
+<div class="grain"></div>
+
+<div id="app">
+
+<!-- =========================
+     SCENE 1
+========================= -->
+
+<section
+    class="scene active cinema"
+    id="s1">
+
+    <div class="inner fadeIn">
+
+        <div class="reel">
+            🎬
+        </div>
+
+        <div class="film">
+            A PRIVATE FILM • 001
+        </div>
+
+        <h1>
+            THE STORY
+            <br>
+            <span class="pink">
+                OF RANIA
+            </span>
+        </h1>
+
+        <div class="titleLine"></div>
+
+        <p>
+            فيلم قصير صُنع لشخص واحد فقط.
+            <br>
+            أنتِ.
+        </p>
+
+        <button
+            class="btn"
+            onclick="begin()">
+
+            ▶ ابدئي الفيلم
+
+        </button>
+
+        <div
+            class="muted"
+            style="margin-top:15px">
+
+            يفضل فتحه بصوت 🎵
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     SCENE 2
+========================= -->
+
+<section
+    class="scene cinema"
+    id="s2">
+
+    <div class="inner">
+
+        <div class="film">
+            SCENE 01 • THE BEGINNING
+        </div>
+
+        <h2>
+
+            في مكان ما...
+
+            <br>
+
+            <span class="gold">
+                وفي وقت ما...
+            </span>
+
+        </h2>
+
+        <p>
+
+            دخلت فتاة إلى حياة شخص،
+            دون أن تعرف أن وجودها سيصبح
+            مع الوقت جزءًا من تفاصيل أيامه.
+
+        </p>
+
+        <img
+            src="kitty1.png"
+            class="kitty kittyHero"
+            alt="Hello Kitty">
+
+        <p
+            class="pink"
+            style="font-weight:800">
+
+            وكان اسم تلك الفتاة...
+            رانيا ❤️
+
+        </p>
+
+        <button
+            class="btn"
+            onclick="next()">
+
+            المشهد التالي →
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     SCENE 3
+========================= -->
+
+<section
+    class="scene"
+    id="s3">
+
+    <div class="inner">
+
+        <div class="film">
+            SCENE 02 • SECRET FILE
+        </div>
+
+        <h2>
+            ملف سري 🔐
+        </h2>
+
+        <div class="file">
+
+            <div class="fileTop">
+
+                <span class="fileCode">
+                    CASE #RANIA-001
+                </span>
+
+                <span class="status">
+                    OPEN
+                </span>
+
+            </div>
+
+            <div class="fileRows">
+
+                <div class="row">
+
+                    <span>
+                        الاسم
+                    </span>
+
+                    <b>
+                        رانيا
+                    </b>
+
+                </div>
+
+                <div class="row">
+
+                    <span>
+                        الحالة
+                    </span>
+
+                    <b>
+                        مهمة جدًا
+                    </b>
+
+                </div>
+
+                <div class="row">
+
+                    <span>
+                        مستوى التأثير
+                    </span>
+
+                    <b class="danger">
+                        مرتفع جدًا ❤️
+                    </b>
+
+                </div>
+
+                <div class="row">
+
+                    <span>
+                        التشخيص
+                    </span>
+
+                    <b>
+                        لا يمكن تجاهلها
+                    </b>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <img
+            src="kitty2.png"
+            class="kitty"
+            alt="Hello Kitty">
+
+        <button
+            class="btn"
+            onclick="openPopup(
+                'نتيجة التحقيق ❤️',
+                'بعد دراسة القضية بعناية، توصلنا إلى نتيجة واحدة: رانيا ليست شخصية عابرة في هذه القصة.'
+            )">
+
+            فتح النتيجة
+
+        </button>
+
+        <button
+            class="btn smallBtn"
+            onclick="next()">
+
+            متابعة التحقيق
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     SCENE 4
+========================= -->
+
+<section
+    class="scene"
+    id="s4">
+
+    <div class="inner">
+
+        <div class="film">
+            SCENE 03 • EVIDENCE
+        </div>
+
+        <h2>
+            الأدلة التي وجدناها
+        </h2>
+
+        <p>
+            اضغطي على كل دليل.
+            بعضها أخطر مما يبدو. 😌
+        </p>
+
+        <div class="evidenceGrid">
+
+            <div
+                class="evidence"
+                onclick="openPopup(
+                    'الدليل 01 🌹',
+                    'هناك شيء جميل في ابتسامتكِ؛ لأنها تستطيع أن تغيّر مزاج يوم كامل.'
+                )">
+
+                <div class="eIcon">
+                    🌹
+                </div>
+
+                <div class="eTitle">
+                    الابتسامة
+                </div>
+
+                <div class="eSub">
+                    Evidence 01
+                </div>
+
+            </div>
+
+
+            <div
+                class="evidence"
+                onclick="openPopup(
+                    'الدليل 02 🤍',
+                    'أحب طريقتكِ في الاهتمام، حتى عندما لا تنتبهين أنكِ تفعلين ذلك.'
+                )">
+
+                <div class="eIcon">
+                    🤍
+                </div>
+
+                <div class="eTitle">
+                    الحنان
+                </div>
+
+                <div class="eSub">
+                    Evidence 02
+                </div>
+
+            </div>
+
+
+            <div
+                class="evidence"
+                onclick="openPopup(
+                    'الدليل 03 🧸',
+                    'فيكِ جانب طفولي جميل أتمنى ألا تخسريه مهما كبرتِ.'
+                )">
+
+                <div class="eIcon">
+                    🧸
+                </div>
+
+                <div class="eTitle">
+                    الطفولة
+                </div>
+
+                <div class="eSub">
+                    Evidence 03
+                </div>
+
+            </div>
+
+
+            <div
+                class="evidence"
+                onclick="openPopup(
+                    'الدليل 04 ✨',
+                    'تفاصيلكِ الصغيرة هي التي جعلت وجودكِ مختلفًا عن أي وجود آخر.'
+                )">
+
+                <div class="eIcon">
+                    ✨
+                </div>
+
+                <div class="eTitle">
+                    التفاصيل
+                </div>
+
+                <div class="eSub">
+                    Evidence 04
+                </div>
+
+            </div>
+
+        </div>
+
+        <button
+            class="btn"
+            onclick="next()">
+
+            الدليل الأهم →
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     SCENE 5
+========================= -->
+
+<section
+    class="scene"
+    id="s5">
+
+    <div class="inner">
+
+        <div class="film">
+            SCENE 04 • CASE #002
+        </div>
+
+        <h2>
+            الدليل الذي جعلني أراكِ
+            بطريقة مختلفة
+        </h2>
+
+        <img
+            src="kitty3.png"
+            class="kitty"
+            alt="Hello Kitty">
+
+        <div class="kind">
+
+            <p>
+                في أحد الأيام رأيتِ
+                <strong>
+                    طفلة صغيرة تبكي
+                </strong>.
+            </p>
+
+            <p>
+                كان بإمكانكِ أن تكملي طريقكِ
+                مثل كثير من الناس.
+            </p>
+
+            <p>
+                لكنّكِ توقفتِ،
+                اقتربتِ منها،
+                وحاولتِ مساعدتها.
+            </p>
+
+            <p>
+                ربما بالنسبة لكِ كان الأمر بسيطًا وانتهى.
+            </p>
+
+            <p>
+                أما بالنسبة لي،
+                فقد رأيت فيه شيئًا أكبر بكثير.
+            </p>
+
+            <p>
+                <strong>
+                    رأيت قلبًا لا يستطيع أن يتجاهل
+                    شخصًا يحتاج إلى المساعدة.
+                </strong>
+            </p>
+
+            <p>
+                وفي تلك اللحظة فكرت:
+                <strong>
+                    هذه الفتاة قلبها طيب فعلًا. ❤️
+                </strong>
+            </p>
+
+            <p>
+                وهذا النوع من الجمال
+                هو الذي أتمنى ألا يتغير فيكِ أبدًا.
+            </p>
+
+        </div>
+
+        <button
+            class="btn"
+            onclick="next()">
+
+            لديكِ اختبار صغير 🕵️
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     SCENE 6
+========================= -->
+
+<section
+    class="scene"
+    id="s6">
+
+    <div class="inner">
+
+        <div class="film">
+            SCENE 05 • THE TEST
+        </div>
+
+        <h2>
+            اختبار المحققة رانيا 🕵️
+        </h2>
+
+        <p>
+            سؤال واحد فقط.
+            اختاري الإجابة التي تريدينها.
+        </p>
+
+        <div class="quiz">
+
+            <div
+                class="q"
+                onclick="answer(this,false)">
+
+                ما الشيء الذي أحبه فيكِ أكثر؟
+                <br>
+                ابتسامتكِ فقط
+
+            </div>
+
+
+            <div
+                class="q"
+                onclick="answer(this,false)">
+
+                قلبكِ فقط
+
+            </div>
+
+
+            <div
+                class="q"
+                onclick="answer(this,true)">
+
+                كل التفاصيل التي جعلتكِ أنتِ ❤️
+
+            </div>
+
+
+            <div
+                class="q"
+                onclick="answer(this,false)">
+
+                لا أعرف...
+                عليكِ أن تخبريني 😌
+
+            </div>
+
+        </div>
+
+        <button
+            class="btn"
+            onclick="next()">
+
+            انتقلي إلى المستقبل ⏳
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     SCENE 7
+========================= -->
+
+<section
+    class="scene"
+    id="s7">
+
+    <div class="inner">
+
+        <div class="film">
+            SCENE 06 • TIME MACHINE
+        </div>
+
+        <h2>
+            آلة الزمن ⏳
+        </h2>
+
+        <p>
+            ثلاث لحظات من قصة
+            لم تنتهِ بعد.
+        </p>
+
+        <div class="timeMachine">
+
+            <div class="dial">
+
+                <div
+                    class="dialYear"
+                    id="dialYear">
+
+                    2026
+
+                </div>
+
+            </div>
+
+            <div
+                id="timeText"
+                style="margin-top:18px">
+
+                <p>
+                    الآن...
+                    اللحظة التي نعيشها.
+                </p>
+
+            </div>
+
+            <div class="years">
+
+                <button
+                    class="year active"
+                    onclick="setYear(2026,this)">
+
+                    2026
+
+                </button>
+
+                <button
+                    class="year"
+                    onclick="setYear(2030,this)">
+
+                    2030
+
+                </button>
+
+                <button
+                    class="year"
+                    onclick="setYear(2040,this)">
+
+                    2040
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <button
+            class="btn"
+            onclick="next()">
+
+            رسالة لم تُرسل 💌
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     SCENE 8
+========================= -->
+
+<section
+    class="scene"
+    id="s8">
+
+    <div class="inner">
+
+        <div class="film">
+            SCENE 07 • UNSENT MESSAGE
+        </div>
+
+        <h2>
+            رسالة لم تُرسل
+        </h2>
+
+        <div class="mail">
+
+            <div class="mailHead">
+
+                FROM: Me
+                &nbsp;&nbsp;
+                TO: Rania
+                &nbsp;&nbsp;
+                SUBJECT:
+                Something I never knew how to say
+
+            </div>
+
+            <div
+                class="mailBody"
+                id="mailBody">
+
+                اضغطي على الزر
+                لتبدأ الرسالة...
+
+            </div>
+
+        </div>
+
+        <button
+            class="btn"
+            onclick="typeLetter()">
+
+            ▶ تشغيل الرسالة
+
+        </button>
+
+        <button
+            class="btn smallBtn"
+            onclick="next()">
+
+            هناك مشهد أخير...
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     SCENE 9
+========================= -->
+
+<section
+    class="scene scene8"
+    id="s9">
+
+    <div class="inner">
+
+        <div class="film">
+            SCENE 08 • DELETED SCENE
+        </div>
+
+        <h2>
+            هناك مشهد لم يكن من المفترض
+            أن تريه...
+        </h2>
+
+        <div class="deleted">
+
+            <img
+                src="kitty4.png"
+                class="kitty"
+                alt="Hello Kitty">
+
+            <p class="muted">
+                CLASSIFIED • DO NOT OPEN
+            </p>
+
+            <button
+                class="play"
+                onclick="deletedScene()">
+
+                ▶
+
+            </button>
+
+            <p style="margin-top:15px">
+
+                تشغيل المشهد المحذوف
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     SCENE 10
+========================= -->
+
+<section
+    class="scene end"
+    id="s10">
+
+    <div class="inner">
+
+        <div class="heart">
+            ❤️
+        </div>
+
+        <div class="film">
+            THE END
+        </div>
+
+        <div class="big">
+
+            THIS IS NOT
+            <br>
+
+            <span class="pink">
+                THE END.
+            </span>
+
+        </div>
+
+        <div class="titleLine"></div>
+
+        <p>
+            لأن أجمل جزء من قصتنا
+            لم يُكتب بعد.
+        </p>
+
+        <img
+            src="kitty5.png"
+            class="kitty kittyHero"
+            alt="Hello Kitty">
+
+        <div class="continue">
+            TO BE CONTINUED...
+        </div>
+
+        <button
+            class="btn"
+            onclick="finale()">
+
+            آخر رسالة ❤️
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     SCENE 11
+========================= -->
+
+<section
+    class="scene end"
+    id="s11">
+
+    <div class="inner">
+
+        <div class="heart">
+            💗
+        </div>
+
+        <h2>
+            رانيا...
+        </h2>
+
+        <div class="letter">
+
+            <p>
+                ربما كانت هذه مجرد صفحات على شاشة،
+                لكنها تحمل شيئًا حقيقيًا جدًا.
+            </p>
+
+            <p>
+                تحمل جزءًا من الكلام الذي قد لا أعرف
+                كيف أقوله كل مرة،
+                وجزءًا من شعور لا تكفيه الكلمات.
+            </p>
+
+            <p>
+                أنتِ لستِ مجرد شخص أحببته.
+                أنتِ إنسانة أصبحت لها مكانة خاصة جدًا
+                في قلبي.
+            </p>
+
+            <p>
+                أحب قلبكِ،
+                طيبتكِ،
+                ضحكتكِ،
+                تفاصيلكِ،
+                والطريقة التي تستطيعين بها
+                أن تجعلي يومًا عاديًا يبدو مختلفًا.
+            </p>
+
+            <p>
+                وإذا كان لهذه القصة فيلم فعلًا،
+                فأنا لا أريد أن تكون نهايته هنا.
+            </p>
+
+            <p class="sign">
+
+                إلى رانيا،
+                <br>
+
+                من شخص سعيد لأنكِ
+                أصبحتِ جزءًا من حكايته. ❤️
+
+            </p>
+
+        </div>
+
+        <button
+            class="btn"
+            onclick="restart()">
+
+            ↻ مشاهدة الفيلم من البداية
+
+        </button>
+
+    </div>
+
+</section>
+
+</div>
+
+
+<!-- =========================
+     POPUP
+========================= -->
+
+<div id="popup">
+
+    <div class="popBox">
+
+        <div
+            class="popTitle"
+            id="popTitle">
+        </div>
+
+        <div
+            class="popText"
+            id="popText">
+        </div>
+
+        <button
+            class="btn smallBtn"
+            onclick="closePopup()">
+
+            إغلاق 🤍
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   VARIABLES
+========================= */
+
+const scenes =
+    [...document.querySelectorAll(".scene")];
+
+let index = 0;
+
+let musicStarted = false;
+
+let typing = false;
+
+
+/* =========================
+   SCREEN CONTROL
+========================= */
+
+function show(n){
+
+    scenes[index].classList.remove("active");
+
+    index = n;
+
+    scenes[index].classList.add("active");
+
+    document
+        .getElementById("barFill")
+        .style.width =
+        ((index)/(scenes.length-1)*100)+"%";
+
+    burst(
+        innerWidth/2,
+        innerHeight/2,
+        12
+    );
+}
+
+
+function next(){
+
+    show(
+        Math.min(
+            index+1,
+            scenes.length-1
+        )
+    );
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+function begin(){
+
+    startMusic();
+
+    show(1);
+
+}
+
+
+/* =========================
+   MUSIC
+========================= */
+
+function startMusic(){
+
+    const music =
+        document.getElementById("music");
+
+    music.volume = .42;
+
+    music.play()
+        .then(()=>{
+
+            musicStarted = true;
+
+            document
+                .getElementById("sound")
+                .textContent="🔊";
+
+        })
+        .catch(()=>{
+
+            document
+                .getElementById("sound")
+                .textContent="🎵";
+
+        });
+
+}
+
+
+function toggleSound(){
+
+    const music =
+        document.getElementById("music");
+
+    if(music.paused){
+
+        music.play()
+            .then(()=>{
+
+                document
+                    .getElementById("sound")
+                    .textContent="🔊";
+
+            })
+            .catch(()=>{});
+
+    }else{
+
+        music.pause();
+
+        document
+            .getElementById("sound")
+            .textContent="🔇";
+
+    }
+
+}
+
+
+/* =========================
+   POPUP
+========================= */
+
+function openPopup(title,text){
+
+    document
+        .getElementById("popTitle")
+        .textContent=title;
+
+    document
+        .getElementById("popText")
+        .textContent=text;
+
+    document
+        .getElementById("popup")
+        .classList.add("show");
+
+    burst(
+        innerWidth/2,
+        innerHeight/2,
+        18
+    );
+
+}
+
+
+function closePopup(){
+
+    document
+        .getElementById("popup")
+        .classList.remove("show");
+
+}
+
+
+/* =========================
+   QUIZ
+========================= */
+
+function answer(el,correct){
+
+    document
+        .querySelectorAll(".q")
+        .forEach(
+            x=>x.classList.remove("correct")
+        );
+
+    el.classList.add("correct");
+
+    if(correct){
+
+        burst(
+            innerWidth/2,
+            innerHeight/2,
+            30
+        );
+
+        openPopup(
+            "إجابة صحيحة ❤️",
+
+            "بالضبط. لأنني لم أحب تفصيلًا واحدًا فيكِ؛ أحببت التفاصيل التي اجتمعت لتصنع رانيا."
+        );
+
+    }else{
+
+        openPopup(
+            "قريبة جدًا 😌",
+
+            "الإجابة الحقيقية أكبر من اختيار واحد. جربي أن تنظري إلى الصورة كاملة."
+        );
+
+    }
+
+}
+
+
+/* =========================
+   TIME MACHINE
+========================= */
+
+function setYear(year,el){
+
+    document
+        .querySelectorAll(".year")
+        .forEach(
+            x=>x.classList.remove("active")
+        );
+
+    el.classList.add("active");
+
+    document
+        .getElementById("dialYear")
+        .textContent=year;
+
+    const text =
+        document.getElementById("timeText");
+
+    if(year===2026){
+
+        text.innerHTML=
+        "<p>الآن... اللحظة التي نعيشها. وربما تكون هذه اللحظة واحدة من الذكريات التي سنبتسم عندما نتذكرها.</p>";
+
+    }
+
+    if(year===2030){
+
+        text.innerHTML=
+        "<p>بعد سنوات... أتمنى أن تكون الحياة قد حملت لكِ راحة وفرحًا أكبر، وأن تكون أحلامكِ قد أصبحت أقرب مما تتخيلين.</p>";
+
+    }
+
+    if(year===2040){
+
+        text.innerHTML=
+        "<p>بعد سنوات أكثر... أتخيل أننا ننظر إلى هذه الصفحة ونضحك، لأن أجمل أجزاء القصة لم تكن هنا أصلًا، بل في الأيام التي جاءت بعدها.</p>";
+
+    }
+
+    burst(
+        innerWidth/2,
+        innerHeight/2,
+        12
+    );
+
+}
+
+
+/* =========================
+   TYPING LETTER
+========================= */
+
+function typeLetter(){
+
+    if(typing) return;
+
+    typing=true;
+
+    const text =
+    "رانيا... هناك أشياء كثيرة يمكن أن أكتبها، لكن أكثر ما أريدكِ أن تعرفيه هو أن وجودكِ أصبح يعني لي الكثير. أحب الطريقة التي تجعلين بها الأيام العادية أجمل، وأحب قلبكِ الطيب، وأحب تلك التفاصيل الصغيرة التي ربما لا تعرفين أنها أصبحت عزيزة عليّ. لا أعرف ماذا سيكتب المستقبل، لكنني أعرف أنني سعيد لأن اسمكِ أصبح جزءًا من قصتي. ❤️";
+
+    const box =
+        document.getElementById("mailBody");
+
+    box.innerHTML="";
+
+    let i=0;
+
+    const timer =
+        setInterval(()=>{
+
+            box.innerHTML =
+                text.slice(0,i++)
+                +
+                '<span class="typingCursor"></span>';
+
+            if(i>text.length){
+
+                clearInterval(timer);
+
+                box.innerHTML=text;
+
+                typing=false;
+
+                burst(
+                    innerWidth/2,
+                    innerHeight/2,
+                    25
+                );
+
+            }
+
+        },28);
+
+}
+
+
+/* =========================
+   DELETED SCENE
+========================= */
+
+function deletedScene(){
+
+    burst(
+        innerWidth/2,
+        innerHeight/2,
+        70
+    );
+
+    setTimeout(
+        ()=>show(9),
+        650
+    );
+
+}
+
+
+/* =========================
+   FINAL
+========================= */
+
+function finale(){
+
+    burst(
+        innerWidth/2,
+        innerHeight/2,
+        100
+    );
+
+    setTimeout(
+        ()=>show(10),
+        450
+    );
+
+}
+
+
+/* =========================
+   RESTART
+========================= */
+
+function restart(){
+
+    scenes[index]
+        .classList
+        .remove("active");
+
+    index=0;
+
+    scenes[0]
+        .classList
+        .add("active");
+
+    document
+        .getElementById("barFill")
+        .style.width="0%";
+
+    window.scrollTo(0,0);
+
+}
+
+
+/* =========================
+   PARTICLES
+========================= */
+
+function burst(x,y,count){
+
+    const symbols=[
+        "❤️",
+        "💗",
+        "💖",
+        "✨",
+        "🌹",
+        "⭐"
+    ];
+
+    const layer =
+        document.getElementById("particles");
+
+    for(
+        let i=0;
+        i<count;
+        i++
+    ){
+
+        const p =
+            document.createElement("span");
+
+        p.className="part";
+
+        p.textContent =
+            symbols[
+                Math.floor(
+                    Math.random()
+                    *
+                    symbols.length
+                )
+            ];
+
+        p.style.left=x+"px";
+
+        p.style.top=y+"px";
+
+        const angle =
+            Math.random()
+            *
+            Math.PI
+            *
+            2;
+
+        const distance =
+            60
+            +
+            Math.random()
+            *
+            220;
+
+        p.style.setProperty(
+            "--x",
+            Math.cos(angle)
+            *
+            distance
+            +"px"
+        );
+
+        p.style.setProperty(
+            "--y",
+            Math.sin(angle)
+            *
+            distance
+            +"px"
+        );
+
+        layer.appendChild(p);
+
+        setTimeout(
+            ()=>p.remove(),
+            1400
+        );
+
+    }
+
+}
+
+
+/* =========================
+   BACKGROUND FLOATING HEARTS
+========================= */
+
+setInterval(()=>{
+
+    const layer =
+        document.getElementById("particles");
+
+    const p =
+        document.createElement("span");
+
+    p.className="part";
+
+    p.textContent =
+        [
+            "♡",
+            "♥",
+            "✦"
+        ][
+            Math.floor(
+                Math.random()*3
+            )
+        ];
+
+    p.style.left =
+        Math.random()
+        *
+        innerWidth
+        +"px";
+
+    p.style.top =
+        (innerHeight+20)
+        +"px";
+
+    p.style.setProperty(
+        "--x",
+        (
+            Math.random()*160
+            -
+            80
+        )
+        +"px"
+    );
+
+    p.style.setProperty(
+        "--y",
+        (
+            -innerHeight-80
+        )
+        +"px"
+    );
+
+    p.style.animationDuration =
+        (
+            4
+            +
+            Math.random()*4
+        )
+        +"s";
+
+    layer.appendChild(p);
+
+    setTimeout(
+        ()=>p.remove(),
+        8500
+    );
+
+},900);
+
+
+/* =========================
+   KEYBOARD
+========================= */
+
+document.addEventListener(
+    "keydown",
+    e=>{
+
+        if(
+            e.key==="ArrowRight"
+            ||
+            e.key==="ArrowDown"
+        ){
+
+            next();
+
+        }
+
+        if(e.key==="Escape"){
+
+            closePopup();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
